@@ -30,10 +30,24 @@ export class CodeEditorView extends TextFileView {
 		await super.onLoadFile(file);
 		console.log("!!onLoadFile", this.id, this.file.name, file.name)
 
-
 		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs";
+
+		const queryParameters = new URLSearchParams();
+		queryParameters.append("lang", this.getLanguage());
+		queryParameters.append("theme", theme);
+		queryParameters.append("background", "transparent");
+		queryParameters.append("folding", this.plugin.settings.folding ? "true" : "false");
+		queryParameters.append("lineNumbers", this.plugin.settings.lineNumbers ? "on" : "off");
+		queryParameters.append("minimap", this.plugin.settings.minimap ? "true" : "false");
+		queryParameters.append("javascriptDefaults", "true");
+		queryParameters.append("typescriptDefaults", "true");
+		queryParameters.append("javascriptDefaultsNoSemanticValidation", !this.plugin.settings.semanticValidation ? "true" : "false");
+		queryParameters.append("typescriptDefaultsNoSemanticValidation", !this.plugin.settings.semanticValidation ? "true" : "false");
+		queryParameters.append("javascriptDefaultsNoSyntaxValidation", !this.plugin.settings.syntaxValidation ? "true" : "false");
+		queryParameters.append("typescriptDefaultsNoSyntaxValidation", !this.plugin.settings.syntaxValidation ? "true" : "false");
+
 		this.iframe = document.createElement("iframe");
-		this.iframe.src = `https://embeddable-monaco.lukasbach.com?lang=${this.getLanguage()}&theme=${theme}&background=transparent`;
+		this.iframe.src = `https://embeddable-monaco.lukasbach.com?${queryParameters.toString()}`;
 		this.iframe.style.width = "100%";
 		this.iframe.style.height = "100%";
 		(this.containerEl.getElementsByClassName("view-content")[0] as HTMLElement).style.overflow = "hidden";
