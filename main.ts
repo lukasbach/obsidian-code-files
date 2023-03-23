@@ -98,10 +98,6 @@ class CodeEditorView extends TextFileView {
 
 	setViewData(data: string, clear = false): void {
 		console.log("!!set view data", this.id, data, clear)
-		if (clear) {
-			this.clear();
-			return;
-		}
 		this.value = data;
 		this.send("change-value", { value: data });
 	}
@@ -141,6 +137,7 @@ class CodeEditorView extends TextFileView {
 	}
 
 	send(type: string, payload: any) {
+		console.log("!!send", !!this.iframe.contentWindow)
 		this.iframe.contentWindow?.postMessage({
 			type,
 			...payload
