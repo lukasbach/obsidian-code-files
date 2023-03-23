@@ -1,7 +1,6 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
-import monacoPlugin from "esbuild-monaco-editor-plugin";
 
 const banner =
 `/*
@@ -18,10 +17,6 @@ const context = await esbuild.context({
 	},
 	entryPoints: ["src/main.ts"],
 	bundle: true,
-	// plugins: [monacoPlugin({languages: ["typescript", "json", "css", "html"]})],
-	// loader: {
-	//   ".ttf": "file",
-	// },
 	external: [
 		"obsidian",
 		"electron",
