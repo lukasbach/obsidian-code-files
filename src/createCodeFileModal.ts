@@ -1,5 +1,4 @@
 import {
-	App,
 	ButtonComponent,
 	DropdownComponent,
 	Modal,
@@ -14,9 +13,11 @@ import CodeFilesPlugin from "./codeFilesPlugin";
 export class CreateCodeFileModal extends Modal {
 	fileName = "My Code File";
 	fileExtension = this.plugin.settings.extensions[0];
+	parent: TAbstractFile;
 
-	constructor(private plugin: CodeFilesPlugin, private parent: TAbstractFile) {
+	constructor(private plugin: CodeFilesPlugin, parent?: TAbstractFile) {
 		super(plugin.app);
+		this.parent = parent ?? this.plugin.app.vault.getRoot();
 	}
 
 	onOpen() {

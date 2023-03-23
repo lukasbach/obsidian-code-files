@@ -14,7 +14,7 @@ export class CodeFilesSettingsTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', {text: 'Code Files Settings'});
 
 
 		new Setting(containerEl)
