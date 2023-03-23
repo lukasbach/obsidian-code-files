@@ -1,11 +1,11 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
+	"id": "obsidian-code-files-plugin",
+	"name": "Code Files",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+	"description": "Edit Code Files in Obsidian with VSCode's powerful Monaco Editor",
+	"author": "Lukas Bach",
+	"authorUrl": "https://lukasbach.com",
+	"fundingUrl": "https://github.com/lukasbach/.github/blob/main/funding.md",
+	"isDesktopOnly": true
 }
