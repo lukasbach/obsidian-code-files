@@ -145,7 +145,7 @@ class CodeEditorView extends TextFileView {
 	}
 }
 
-export default class MyPlugin extends Plugin {
+export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 
@@ -155,37 +155,6 @@ export default class MyPlugin extends Plugin {
 
 		this.registerView(viewType, leaf => new CodeEditorView(leaf));
 		this.registerExtensions(["ts", "tsx", "txt"], viewType);
-
-
-
-
-		function ensureFirstBackSlash(str: string) {
-			return str.length > 0 && str.charAt(0) !== '/'
-				? '/' + str
-				: str;
-		}
-
-		function uriFromPath(_path: string) {
-			const pathName = path.resolve(_path).replace(/\\/g, '/');
-			return encodeURI('file://' + ensureFirstBackSlash(pathName));
-		}
-
-		const baseUri = this.app.vault.adapter.getResourcePath([
-			this.app.vault.configDir,
-			"plugins/obsidian-code-files",
-			"node_modules/monaco-editor/min/vs"
-		].join("/"));
-
-		const getWorkerUrl = (workerUrlSuffix: string) => {
-			return this.app.vault.adapter.getResourcePath([
-				this.app.vault.configDir,
-				"plugins/obsidian-code-files",
-				"node_modules/monaco-editor/min",
-				workerUrlSuffix
-			].join("/"));
-		}
-
-
 
 
 
@@ -239,16 +208,7 @@ export default class MyPlugin extends Plugin {
 		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+		this.addSettingTab(new CodeFilesSettingsTab(this.app, this));
 	}
 
 	onunload() {
@@ -280,10 +240,10 @@ class SampleModal extends Modal {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class CodeFilesSettingsTab extends PluginSettingTab {
+	plugin: CodeFilesPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: CodeFilesPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
