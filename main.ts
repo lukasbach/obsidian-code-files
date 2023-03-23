@@ -1,6 +1,26 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {
+	App,
+	Editor,
+	MarkdownView,
+	Modal,
+	Notice,
+	Plugin,
+	PluginSettingTab,
+	Setting,
+	TextFileView, TFile,
+	View
+} from 'obsidian';
+import * as path from "path";
+import {EditorState, Compartment} from "@codemirror/state"
+import {EditorView, keymap} from "@codemirror/view"
+import {defaultKeymap} from "@codemirror/commands"
+import { javascript } from "@codemirror/lang-javascript";
+import { json } from "@codemirror/lang-json";
+import { python } from "@codemirror/lang-python";
 
 // Remember to rename these classes and interfaces!
+
+
 
 interface MyPluginSettings {
 	mySetting: string;
@@ -10,11 +30,167 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	mySetting: 'default'
 }
 
+const viewType = "code-editor";
+
+let i = 0;
+class CodeEditorView extends TextFileView {
+	id = i++;
+	value: string = "";
+	iframe: HTMLIFrameElement;
+
+	getDisplayText(): string {
+		console.log("!!getDisplayText", this.id)
+		return "display text";
+	}
+
+	getViewType(): string {
+		return viewType;
+	}
+
+	async onClose() {
+		console.log("!!onClose", this.id)
+		this.iframe.remove();
+	}
+
+	async onLoadFile(file: TFile) {
+		await super.onLoadFile(file);
+		console.log("!!onLoadFile", this.id, file.name)
+		this.send("change-language", { language: this.getLanguage() });
+	}
+
+	async onUnloadFile(file: TFile) {
+		console.log("!!onUnloadFile", this.id, file.name)
+	}
+
+	async onOpen() {
+		console.log("!!onOpen", this.id)
+		this.iframe = document.createElement("iframe");
+		this.iframe.src = `https://embeddable-monaco.lukasbach.com?lang=${this.getLanguage()}`;
+		this.iframe.style.width = "100%";
+		this.iframe.style.height = "100%";
+		(this.containerEl.getElementsByClassName("view-content")[0] as HTMLElement).style.overflow = "hidden";
+		this.containerEl.getElementsByClassName("view-content")[0].append(this.iframe);
+		window.addEventListener("message", ({ data }) => {
+			switch(data.type) {
+				case "ready": {
+					this.send("change-value", { value: this.value });
+					this.send("change-background", { background: "transparent", theme: "vs-dark" });
+					break;
+				}
+				case "change": {
+					this.value = data.value;
+					this.requestSave();
+					break;
+				}
+			}
+		});
+	}
+
+	clear(): void {
+		console.log("!!clear", this.id)
+		this.value = "";
+		this.send("change-value", { value: "" });
+	}
+
+	getViewData(): string {
+		return this.value;
+	}
+
+	setViewData(data: string, clear = false): void {
+		console.log("!!set view data", this.id, data, clear)
+		if (clear) {
+			this.clear();
+			return;
+		}
+		this.value = data;
+		this.send("change-value", { value: data });
+	}
+
+	getLanguage() {
+		switch (this.file?.extension) {
+			case "js":
+			case "jsx":
+				return "javascript";
+			case "ts":
+			case "tsx":
+				return "typescript";
+			case "json":
+				return "json";
+			case "py":
+				return "python";
+			case "css":
+				return "css";
+			case "html":
+				return "html";
+			case "cpp":
+				return "cpp";
+			case "graphql":
+				return "graphql";
+			case "java":
+				return "java";
+			case "php":
+				return "php";
+			case "sql":
+				return "sql";
+			case "yaml":
+			case "yml":
+				return "yaml";
+			default:
+				return "plaintext";
+		}
+	}
+
+	send(type: string, payload: any) {
+		this.iframe.contentWindow?.postMessage({
+			type,
+			...payload
+		}, "*");
+	}
+}
+
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
+
 	async onload() {
 		await this.loadSettings();
+
+
+		this.registerView(viewType, leaf => new CodeEditorView(leaf));
+		this.registerExtensions(["ts", "tsx", "txt"], viewType);
+
+
+
+
+		function ensureFirstBackSlash(str: string) {
+			return str.length > 0 && str.charAt(0) !== '/'
+				? '/' + str
+				: str;
+		}
+
+		function uriFromPath(_path: string) {
+			const pathName = path.resolve(_path).replace(/\\/g, '/');
+			return encodeURI('file://' + ensureFirstBackSlash(pathName));
+		}
+
+		const baseUri = this.app.vault.adapter.getResourcePath([
+			this.app.vault.configDir,
+			"plugins/obsidian-code-files",
+			"node_modules/monaco-editor/min/vs"
+		].join("/"));
+
+		const getWorkerUrl = (workerUrlSuffix: string) => {
+			return this.app.vault.adapter.getResourcePath([
+				this.app.vault.configDir,
+				"plugins/obsidian-code-files",
+				"node_modules/monaco-editor/min",
+				workerUrlSuffix
+			].join("/"));
+		}
+
+
+
+
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
