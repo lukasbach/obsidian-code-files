@@ -20,7 +20,8 @@ export class CodeFilesSettingsTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('File Extensions')
 			.setDesc('Files with these extensions will show up in the sidebar, and will ' +
-				'be available to create new files from. Seperated by commas.')
+				'be available to create new files from. Seperated by commas. ' +
+				'Changes to the file extensions need a restart to take effect.')
 			.addText(text => text
 				.setPlaceholder('js,ts')
 				.setValue(this.plugin.settings.extensions.join(","))

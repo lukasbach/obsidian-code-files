@@ -13,7 +13,6 @@ export class CodeEditorView extends TextFileView {
 	}
 
 	getDisplayText(): string {
-		console.log("!!getDisplayText", this.id)
 		return this.file?.name;
 	}
 
@@ -22,23 +21,17 @@ export class CodeEditorView extends TextFileView {
 	}
 
 	async onClose() {
-		console.log("!!onClose", this.id)
-		this.iframe.remove();
+		console.log("!!onClose", this.file.name, this.id);
+		this.iframe?.remove();
+		return await super.onClose();
 	}
 
 	async onLoadFile(file: TFile) {
 		await super.onLoadFile(file);
-		console.log("!!onLoadFile", this.id, file.name)
-		this.send("change-language", {language: this.getLanguage()});
-	}
+		console.log("!!onLoadFile", this.id, this.file.name, file.name)
 
-	async onUnloadFile(file: TFile) {
-		console.log("!!onUnloadFile", this.id, file.name)
-	}
 
-	async onOpen() {
-		console.log("!!onOpen", this.id)
-		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs-light";
+		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs";
 		this.iframe = document.createElement("iframe");
 		this.iframe.src = `https://embeddable-monaco.lukasbach.com?lang=${this.getLanguage()}&theme=${theme}&background=transparent`;
 		this.iframe.style.width = "100%";
@@ -49,7 +42,8 @@ export class CodeEditorView extends TextFileView {
 			switch (data.type) {
 				case "ready": {
 					this.send("change-value", {value: this.value});
-					this.send("change-background", {background: "transparent", theme: "vs-dark"});
+					this.send("change-language", {language: this.getLanguage()});
+					this.send("change-background", {background: "transparent", theme});
 					break;
 				}
 				case "change": {
@@ -59,20 +53,34 @@ export class CodeEditorView extends TextFileView {
 				}
 			}
 		});
+
+		return await super.onLoadFile(file);
+	}
+
+	async onUnloadFile(file: TFile) {
+		console.log("!!onUnloadFile", this.id, file.name)
+		this.iframe?.remove();
+		return await super.onUnloadFile(file);
+	}
+
+	async onOpen() {
+		console.log("!!onOpen", this.id, this.file.name)
+		return await super.onOpen();
 	}
 
 	clear(): void {
-		console.log("!!clear", this.id)
+		console.log("!!clear", this.id, this.file.name);
 		this.value = "";
 		this.send("change-value", {value: ""});
 	}
 
 	getViewData(): string {
+		console.log("!!get view data", this.id, this.file.name)
 		return this.value;
 	}
 
 	setViewData(data: string, clear = false): void {
-		console.log("!!set view data", this.id, data, clear)
+		console.log("!!set view data", this.id, this.file.name, data, clear)
 		this.value = data;
 		this.send("change-value", {value: data});
 	}
@@ -112,8 +120,8 @@ export class CodeEditorView extends TextFileView {
 	}
 
 	send(type: string, payload: any) {
-		console.log("!!send", !!this.iframe.contentWindow)
-		this.iframe.contentWindow?.postMessage({
+		// console.log("!!send", this.id, !!this.iframe, !!this.iframe?.contentWindow)
+		this.iframe?.contentWindow?.postMessage({
 			type,
 			...payload
 		}, "*");
