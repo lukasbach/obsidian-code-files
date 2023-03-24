@@ -26,13 +26,13 @@ export class CodeEditorView extends TextFileView {
 
 	async onClose() {
 		await super.onClose();
-		console.log("!!onClose", this.file?.name, this.id);
+		// console.log("!!onClose", this.file?.name, this.id);
 		this.iframe?.remove();
 	}
 
 	async onLoadFile(file: TFile) {
 		await super.onLoadFile(file);
-		console.log("!!onLoadFile", this.id, this.file?.name, file.name)
+		// console.log("!!onLoadFile", this.id, this.file?.name, file.name)
 
 		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs";
 
@@ -67,10 +67,10 @@ export class CodeEditorView extends TextFileView {
 				}
 				case "change": {
 					if (data.context === this.getContext()) {
-						console.log("!change event", data.value, data.context);
+						// console.log("!change event", data.value, data.context);
 						this.value = data.value;
 					} else {
-						console.log("!change event", data.value, data.context, "ignored!!!!!!!!!!!!");
+						// console.log("!change event", data.value, data.context, "ignored!!!!!!!!!!!!");
 					}
 					// this.requestSave();
 					break;
@@ -81,28 +81,28 @@ export class CodeEditorView extends TextFileView {
 
 	async onUnloadFile(file: TFile) {
 		await super.onUnloadFile(file);
-		console.log("!!onUnloadFile", this.id, file.name)
+		// console.log("!!onUnloadFile", this.id, file.name)
 		this.iframe?.remove();
 	}
 
 	async onOpen() {
 		await super.onOpen();
-		console.log("!!onOpen", this.id, this.file?.name)
+		// console.log("!!onOpen", this.id, this.file?.name)
 	}
 
 	clear(): void {
-		console.log("!!clear", this.id, this.file?.name);
+		// console.log("!!clear", this.id, this.file?.name);
 		this.value = "";
 		this.send("change-value", {value: ""});
 	}
 
 	getViewData(): string {
-		console.log("!!get view data", this.id, this.file?.name, this.value)
+		// console.log("!!get view data", this.id, this.file?.name, this.value)
 		return this.value;
 	}
 
 	setViewData(data: string, clear = false): void {
-		console.log("!!set view data", this.id, this.file?.name, data, clear)
+		// console.log("!!set view data", this.id, this.file?.name, data, clear)
 		this.value = data;
 		this.send("change-value", {value: data});
 	}
