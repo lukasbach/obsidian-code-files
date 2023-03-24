@@ -21,18 +21,18 @@ export class CodeEditorView extends TextFileView {
 	}
 
 	getContext(file?: TFile) {
-		return file?.path ?? this.file.path;
+		return file?.path ?? this.file?.path;
 	}
 
 	async onClose() {
 		await super.onClose();
-		console.log("!!onClose", this.file.name, this.id);
+		console.log("!!onClose", this.file?.name, this.id);
 		this.iframe?.remove();
 	}
 
 	async onLoadFile(file: TFile) {
 		await super.onLoadFile(file);
-		console.log("!!onLoadFile", this.id, this.file.name, file.name)
+		console.log("!!onLoadFile", this.id, this.file?.name, file.name)
 
 		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs";
 
