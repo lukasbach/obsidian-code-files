@@ -7,7 +7,6 @@ import {viewType} from "./common";
 export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
 
-
 	async onload() {
 		await this.loadSettings();
 
