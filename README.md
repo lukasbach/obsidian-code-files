@@ -12,4 +12,5 @@ on a folder in the side pane and clicking on "Create Code File", search for
 in the ribbon.
 
 ![img_1.png](img_1.png)
+
 ![img.png](img.png)
