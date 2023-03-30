@@ -5,8 +5,8 @@
 The plugin adds a code editor view to Obsidian. The code editor uses the powerful
 [Monaco Editor](https://microsoft.github.io/monaco-editor/), which also powers VS Code.
 
-** Caveat: This plugin currently relies on hosted dependencies and thus needs an internet connection.
-Read [below](#caveat-online-dependency) for more information. **
+**Caveat: This plugin currently relies on hosted dependencies and thus needs an internet connection.
+Read [below](#caveat-online-dependency) for more information.**
 
 In the plugin settings, you can configure for which file extensions the editor will be
 available as default editor. You can also create new code files, either by right clicking
