@@ -33,7 +33,7 @@ export default class CodeFilesPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'code-files-create',
+			id: 'create',
 			name: 'Create new Code File',
 			callback: () => {
 				new CreateCodeFileModal(this).open();
