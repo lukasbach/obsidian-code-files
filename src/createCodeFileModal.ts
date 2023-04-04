@@ -21,48 +21,52 @@ export class CreateCodeFileModal extends Modal {
 	}
 
 	onOpen() {
-		const {contentEl} = this;
-		contentEl.style.display = "flex"
-		contentEl.style.alignItems = "center";
-		const fileNameInput = new TextComponent(contentEl);
-		fileNameInput.inputEl.style.flexGrow = "1";
-		fileNameInput.inputEl.style.marginRight = "10px";
-		fileNameInput.setValue(this.fileName);
-		fileNameInput.inputEl.addEventListener("keypress", e => {
-			if (e.key === "Enter") {
-				this.complete();
-			}
-		});
-		fileNameInput.onChange(value => this.fileName = value);
+    const { contentEl } = this;
+    contentEl.style.display = "flex";
+    contentEl.style.alignItems = "center";
+    const fileNameInput = new TextComponent(contentEl);
+    fileNameInput.inputEl.style.flexGrow = "1";
+    fileNameInput.inputEl.style.marginRight = "10px";
+    fileNameInput.setValue(this.fileName);
+    fileNameInput.inputEl.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        this.complete();
+      }
+    });
+    fileNameInput.onChange((value) => (this.fileName = value));
 
-		const fileExtensionInput = new DropdownComponent(contentEl);
-		fileExtensionInput.selectEl.style.marginRight = "10px";
-		fileExtensionInput.addOptions(this.plugin.settings.extensions.reduce((acc, ext) => {
-			acc[ext] = ext;
-			return acc;
-		}, {} as any));
-		fileExtensionInput.setValue(this.fileExtension);
-		fileExtensionInput.onChange(value => this.fileExtension = value);
+    const fileExtensionInput = new DropdownComponent(contentEl);
+    fileExtensionInput.selectEl.style.marginRight = "10px";
+    fileExtensionInput.addOptions(
+      this.plugin.settings.extensions.reduce((acc, ext) => {
+        acc[ext] = ext;
+        return acc;
+      }, {} as any)
+    );
+    fileExtensionInput.setValue(this.fileExtension);
+    fileExtensionInput.onChange((value) => (this.fileExtension = value));
 
-		fileExtensionInput.selectEl.addEventListener("keypress", e => {
-			if (e.key === "Enter") {
-				this.complete();
-			}
-		});
+    fileExtensionInput.selectEl.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        this.complete();
+      }
+    });
 
-		const submitButton = new ButtonComponent(contentEl);
-		submitButton.setCta();
-		submitButton.setButtonText("Create");
-		submitButton.onClick(() => this.complete());
+    const submitButton = new ButtonComponent(contentEl);
+    submitButton.setCta();
+    submitButton.setButtonText("Create");
+    submitButton.onClick(() => this.complete());
 
-		fileNameInput.inputEl.focus();
-	}
+    // fileNameInput.inputEl.focus(); // unecessary if the modal is closed
+  }
 
 	async complete() {
 		this.close();
 		const parent = (this.parent instanceof TFile ? this.parent.parent : this.parent) as TFolder;
-		const newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
-
+		let newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
+		if (newPath.startsWith("//")) {
+          newPath = newPath.slice(2);
+        }
 		const existingFile = this.app.vault.getAbstractFileByPath(newPath);
 		if (existingFile) {
 			new Notice("File already exists");
