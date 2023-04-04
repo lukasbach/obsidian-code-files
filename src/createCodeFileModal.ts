@@ -55,14 +55,16 @@ export class CreateCodeFileModal extends Modal {
 		submitButton.setButtonText("Create");
 		submitButton.onClick(() => this.complete());
 
-		fileNameInput.inputEl.focus();
+		// fileNameInput.inputEl.focus(); it seems unecessary if the modal is closed
 	}
 
 	async complete() {
 		this.close();
 		const parent = (this.parent instanceof TFile ? this.parent.parent : this.parent) as TFolder;
-		const newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
-
+		let newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
+		if (newPath.startsWith("//")) {
+			newPath = newPath.slice(2);
+		}
 		const existingFile = this.app.vault.getAbstractFileByPath(newPath);
 		if (existingFile) {
 			new Notice("File already exists");
