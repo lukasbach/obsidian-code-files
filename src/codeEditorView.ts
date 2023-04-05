@@ -1,3 +1,5 @@
+// https://github.com/microsoft/monaco-editor/issues/1288
+
 import {TextFileView, TFile, WorkspaceLeaf} from "obsidian";
 import {viewType} from "./common";
 import CodeFilesPlugin from "./codeFilesPlugin";
