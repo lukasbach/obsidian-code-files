@@ -2,6 +2,7 @@ import {
 	ButtonComponent,
 	DropdownComponent,
 	Modal,
+	normalizePath,
 	Notice,
 	TAbstractFile,
 	TextComponent,
@@ -55,17 +56,14 @@ export class CreateCodeFileModal extends Modal {
 		submitButton.setButtonText("Create");
 		submitButton.onClick(() => this.complete());
 
-		// fileNameInput.inputEl.focus(); it seems unecessary if the modal is closed
+		fileNameInput.inputEl.focus();
 	}
 
 	async complete() {
 		this.close();
 		const parent = (this.parent instanceof TFile ? this.parent.parent : this.parent) as TFolder;
 		let newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
-		if (newPath.startsWith("//")) {
-			newPath = newPath.slice(2);
-		}
-		const existingFile = this.app.vault.getAbstractFileByPath(newPath);
+		const existingFile = this.app.vault.getAbstractFileByPath(normalizePath(newPath));
 		if (existingFile) {
 			new Notice("File already exists");
 			const leaf = this.app.workspace.getLeaf(true);
