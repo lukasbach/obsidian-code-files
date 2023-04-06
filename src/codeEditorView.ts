@@ -7,7 +7,7 @@ import CodeFilesPlugin from "./codeFilesPlugin";
 export class CodeEditorView extends TextFileView {
 	static i = 0;
 	id = CodeEditorView.i++;
-	value: string = "";
+	value = "";
 	iframe: HTMLIFrameElement;
 
 	constructor(leaf: WorkspaceLeaf, private plugin: CodeFilesPlugin) {

@@ -43,6 +43,7 @@
 		"preScripts": "lint,build",
 		"skipPublish": true,
 		"releaseAssets": "dist/*",
-		"noVersionPrefix": true
+		"noVersionPrefix": true,
+		"branch": "master"
 	}
 }
