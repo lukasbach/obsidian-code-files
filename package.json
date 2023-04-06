@@ -3,25 +3,46 @@
 	"version": "1.0.3",
 	"main": "main.js",
 	"scripts": {
-		"dev": "node esbuild.config.mjs",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"build": "obsidian-plugin build src/main.ts",
+		"dev": "obsidian-plugin dev src/main.ts",
+		"postversion": "node version-bump.mjs",
+		"release": "publish-fast",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
+		"@lukasbach/eslint-config-deps": "^1.0.2",
 		"@types/node": "^16.11.6",
-		"@typescript-eslint/eslint-plugin": "5.29.0",
-		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.17.3",
 		"obsidian": "latest",
 		"tslib": "2.4.0",
-		"typescript": "4.7.4"
+		"typescript": "4.7.4",
+		"publish-fast": "^0.0.19",
+		"obsidian-plugin-cli": "^0.9.0",
+		"eslint": "^8.36.0"
+	},
+	"eslintConfig": {
+		"extends": "@lukasbach/base/react",
+		"parserOptions": {
+			"project": "./tsconfig.json"
+		},
+		"ignorePatterns": [
+			"lib",
+			"*.js"
+		]
 	},
 	"volta": {
 		"node": "18.15.0",
 		"yarn": "1.22.19"
+	},
+	"publish": {
+		"preScripts": "lint,build",
+		"skipPublish": true,
+		"releaseAssets": "dist/*",
+		"noVersionPrefix": true
 	}
 }
