@@ -36,7 +36,7 @@ export class CodeEditorView extends TextFileView {
 		await super.onLoadFile(file);
 		// console.log("!!onLoadFile", this.id, this.file?.name, file.name)
 
-		const theme = this.plugin.settings.isDark ? "vs-dark" : "vs";
+		const theme = (app as any).getTheme() === 'obsidian' ? "vs-dark" : "vs";
 
 		const queryParameters = new URLSearchParams();
 		queryParameters.append("context", this.getContext(file));
@@ -57,8 +57,8 @@ export class CodeEditorView extends TextFileView {
 		this.iframe.src = `https://embeddable-monaco.lukasbach.com?${queryParameters.toString()}`;
 		this.iframe.style.width = "100%";
 		this.iframe.style.height = "100%";
-		(this.containerEl.getElementsByClassName("view-content")[0] as HTMLElement).style.overflow = "hidden";
-		this.containerEl.getElementsByClassName("view-content")[0].append(this.iframe);
+		this.contentEl.style.overflow = "hidden";
+		this.contentEl.append(this.iframe);
 		window.addEventListener("message", ({data}) => {
 			switch (data.type) {
 				case "ready": {

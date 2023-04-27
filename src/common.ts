@@ -6,7 +6,6 @@ export interface MyPluginSettings {
 	minimap: boolean;
 	semanticValidation: boolean;
 	syntaxValidation: boolean;
-	isDark: boolean;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
@@ -16,7 +15,6 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	minimap: true,
 	semanticValidation: true,
 	syntaxValidation: true,
-	isDark: true,
 }
 
 

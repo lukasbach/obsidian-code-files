@@ -79,15 +79,5 @@ export class CodeFilesSettingsTab extends PluginSettingTab {
 					this.plugin.settings.syntaxValidation = value;
 					await this.plugin.saveSettings();
 				}));
-
-		new Setting(containerEl)
-			.setName('Dark Mode')
-			.setDesc('Is obsidian running with a dark theme?')
-			.addToggle(toggle => toggle
-				.setValue(this.plugin.settings.isDark)
-				.onChange(async (value) => {
-					this.plugin.settings.isDark = value;
-					await this.plugin.saveSettings();
-				}));
 	}
 }
