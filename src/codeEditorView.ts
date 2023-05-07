@@ -138,6 +138,16 @@ export class CodeEditorView extends TextFileView {
 			case "yaml":
 			case "yml":
 				return "yaml";
+			case "bat":
+			case "batch":
+				return "bat";
+			case "lua":
+				return "lua";
+			case "rb":
+				return "ruby";
+			case "md":
+			case "mdx":
+				return "markdown";
 			default:
 				return "plaintext";
 		}
