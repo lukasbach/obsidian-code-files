@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "obsidian-plugin build src/main.ts",
 		"dev": "obsidian-plugin dev src/main.ts",
-		"postversion": "node version-bump.mjs",
+		"postversion": "node version-bump.mjs && yarn build",
 		"release": "publish-fast",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix"
