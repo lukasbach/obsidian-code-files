@@ -177,7 +177,6 @@ export class CodeEditorView extends TextFileView {
 			case "rjs":
 			case "gemspec":
 				return "ruby";
-			case "md":
 			case "markdown":
 			case "mdown":
 			case "mkdn":
