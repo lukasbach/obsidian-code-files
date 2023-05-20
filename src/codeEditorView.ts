@@ -176,7 +176,6 @@ export class CodeEditorView extends TextFileView {
 			case "rbx":
 			case "rjs":
 			case "gemspec":
-			case "pp":
 				return "ruby";
 			case "md":
 			case "markdown":
@@ -228,7 +227,6 @@ export class CodeEditorView extends TextFileView {
 				return "ecl";
 			case "pla":
 				return "pla";
-			case "bat":
 			case "cmd":
 				return "bat";
 			case "vb":
