@@ -379,14 +379,6 @@ export class CodeEditorView extends TextFileView {
 			case "c":
 			case "h":
 				return "c";
-			case "mdx":
-				return "markdown";
-			case "mdx":
-				return "markdown";
-			case "mdx":
-				return "markdown";
-			case "mdx":
-				return "markdown";
 			default:
 				return "plaintext";
 		}
