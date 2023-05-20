@@ -289,7 +289,6 @@ export class CodeEditorView extends TextFileView {
 			case "wxl":
 			case "wxs":
 			case "xaml":
-			case "svg":
 			case "svgz":
 			case "opf":
 			case "xslt":
