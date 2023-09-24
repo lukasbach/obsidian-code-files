@@ -7,13 +7,15 @@ import {
 	TAbstractFile,
 	TextComponent,
 	TFile,
-	TFolder
+	TFolder,
 } from "obsidian";
 import CodeFilesPlugin from "./codeFilesPlugin";
 
 export class CreateCodeFileModal extends Modal {
 	fileName = "My Code File";
+
 	fileExtension = this.plugin.settings.extensions[0];
+
 	parent: TAbstractFile;
 
 	constructor(private plugin: CodeFilesPlugin, parent?: TAbstractFile) {
@@ -22,30 +24,36 @@ export class CreateCodeFileModal extends Modal {
 	}
 
 	onOpen() {
-		const {contentEl} = this;
-		contentEl.style.display = "flex"
+		const { contentEl } = this;
+		contentEl.style.display = "flex";
 		contentEl.style.alignItems = "center";
 		const fileNameInput = new TextComponent(contentEl);
 		fileNameInput.inputEl.style.flexGrow = "1";
 		fileNameInput.inputEl.style.marginRight = "10px";
 		fileNameInput.setValue(this.fileName);
-		fileNameInput.inputEl.addEventListener("keypress", e => {
+		fileNameInput.inputEl.addEventListener("keypress", (e) => {
 			if (e.key === "Enter") {
 				this.complete();
 			}
 		});
-		fileNameInput.onChange(value => this.fileName = value);
+		fileNameInput.onChange((value) => {
+			this.fileName = value;
+		});
 
 		const fileExtensionInput = new DropdownComponent(contentEl);
 		fileExtensionInput.selectEl.style.marginRight = "10px";
-		fileExtensionInput.addOptions(this.plugin.settings.extensions.reduce((acc, ext) => {
-			acc[ext] = ext;
-			return acc;
-		}, {} as any));
+		fileExtensionInput.addOptions(
+			this.plugin.settings.extensions.reduce((acc, ext) => {
+				acc[ext] = ext;
+				return acc;
+			}, {} as any)
+		);
 		fileExtensionInput.setValue(this.fileExtension);
-		fileExtensionInput.onChange(value => this.fileExtension = value);
+		fileExtensionInput.onChange((value) => {
+			this.fileExtension = value;
+		});
 
-		fileExtensionInput.selectEl.addEventListener("keypress", e => {
+		fileExtensionInput.selectEl.addEventListener("keypress", (e) => {
 			if (e.key === "Enter") {
 				this.complete();
 			}
@@ -61,9 +69,13 @@ export class CreateCodeFileModal extends Modal {
 
 	async complete() {
 		this.close();
-		const parent = (this.parent instanceof TFile ? this.parent.parent : this.parent) as TFolder;
+		const parent = (
+			this.parent instanceof TFile ? this.parent.parent : this.parent
+		) as TFolder;
 		const newPath = `${parent.path}/${this.fileName}.${this.fileExtension}`;
-		const existingFile = this.app.vault.getAbstractFileByPath(normalizePath(newPath));
+		const existingFile = this.app.vault.getAbstractFileByPath(
+			normalizePath(newPath)
+		);
 		if (existingFile && existingFile instanceof TFile) {
 			new Notice("File already exists");
 			const leaf = this.app.workspace.getLeaf(true);
@@ -71,17 +83,13 @@ export class CreateCodeFileModal extends Modal {
 			return;
 		}
 
-		const newFile = await this.app.vault.create(
-			newPath,
-			"",
-			{}
-		);
+		const newFile = await this.app.vault.create(newPath, "", {});
 		const leaf = this.app.workspace.getLeaf(true);
 		leaf.openFile(newFile);
 	}
 
 	onClose() {
-		const {contentEl} = this;
+		const { contentEl } = this;
 		contentEl.empty();
 	}
 }

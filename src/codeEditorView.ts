@@ -1,13 +1,16 @@
 // https://github.com/microsoft/monaco-editor/issues/1288
 
-import {TextFileView, TFile, WorkspaceLeaf} from "obsidian";
-import {viewType} from "./common";
+import { TextFileView, TFile, WorkspaceLeaf } from "obsidian";
+import { viewType } from "./common";
 import CodeFilesPlugin from "./codeFilesPlugin";
 
 export class CodeEditorView extends TextFileView {
 	static i = 0;
+
 	id = CodeEditorView.i++;
+
 	value = "";
+
 	iframe: HTMLIFrameElement;
 
 	constructor(leaf: WorkspaceLeaf, private plugin: CodeFilesPlugin) {
@@ -36,22 +39,43 @@ export class CodeEditorView extends TextFileView {
 		await super.onLoadFile(file);
 		// console.log("!!onLoadFile", this.id, this.file?.name, file.name)
 
-		const theme = (app as any).getTheme() === 'obsidian' ? "vs-dark" : "vs";
+		const theme = (app as any).getTheme() === "obsidian" ? "vs-dark" : "vs";
 
 		const queryParameters = new URLSearchParams();
 		queryParameters.append("context", this.getContext(file));
 		queryParameters.append("lang", this.getLanguage());
 		queryParameters.append("theme", theme);
 		queryParameters.append("background", "transparent");
-		queryParameters.append("folding", this.plugin.settings.folding ? "true" : "false");
-		queryParameters.append("lineNumbers", this.plugin.settings.lineNumbers ? "on" : "off");
-		queryParameters.append("minimap", this.plugin.settings.minimap ? "true" : "false");
+		queryParameters.append(
+			"folding",
+			this.plugin.settings.folding ? "true" : "false"
+		);
+		queryParameters.append(
+			"lineNumbers",
+			this.plugin.settings.lineNumbers ? "on" : "off"
+		);
+		queryParameters.append(
+			"minimap",
+			this.plugin.settings.minimap ? "true" : "false"
+		);
 		queryParameters.append("javascriptDefaults", "true");
 		queryParameters.append("typescriptDefaults", "true");
-		queryParameters.append("javascriptDefaultsNoSemanticValidation", !this.plugin.settings.semanticValidation ? "true" : "false");
-		queryParameters.append("typescriptDefaultsNoSemanticValidation", !this.plugin.settings.semanticValidation ? "true" : "false");
-		queryParameters.append("javascriptDefaultsNoSyntaxValidation", !this.plugin.settings.syntaxValidation ? "true" : "false");
-		queryParameters.append("typescriptDefaultsNoSyntaxValidation", !this.plugin.settings.syntaxValidation ? "true" : "false");
+		queryParameters.append(
+			"javascriptDefaultsNoSemanticValidation",
+			!this.plugin.settings.semanticValidation ? "true" : "false"
+		);
+		queryParameters.append(
+			"typescriptDefaultsNoSemanticValidation",
+			!this.plugin.settings.semanticValidation ? "true" : "false"
+		);
+		queryParameters.append(
+			"javascriptDefaultsNoSyntaxValidation",
+			!this.plugin.settings.syntaxValidation ? "true" : "false"
+		);
+		queryParameters.append(
+			"typescriptDefaultsNoSyntaxValidation",
+			!this.plugin.settings.syntaxValidation ? "true" : "false"
+		);
 
 		this.iframe = document.createElement("iframe");
 		this.iframe.src = `https://embeddable-monaco.lukasbach.com?${queryParameters.toString()}`;
@@ -59,12 +83,17 @@ export class CodeEditorView extends TextFileView {
 		this.iframe.style.height = "100%";
 		this.contentEl.style.overflow = "hidden";
 		this.contentEl.append(this.iframe);
-		window.addEventListener("message", ({data}) => {
+		window.addEventListener("message", ({ data }) => {
 			switch (data.type) {
 				case "ready": {
-					this.send("change-value", {value: this.value});
-					this.send("change-language", {language: this.getLanguage()});
-					this.send("change-background", {background: "transparent", theme});
+					this.send("change-value", { value: this.value });
+					this.send("change-language", {
+						language: this.getLanguage(),
+					});
+					this.send("change-background", {
+						background: "transparent",
+						theme,
+					});
 					break;
 				}
 				case "change": {
@@ -77,6 +106,8 @@ export class CodeEditorView extends TextFileView {
 					// this.requestSave();
 					break;
 				}
+				default:
+					break;
 			}
 		});
 	}
@@ -95,7 +126,7 @@ export class CodeEditorView extends TextFileView {
 	clear(): void {
 		// console.log("!!clear", this.id, this.file?.name);
 		this.value = "";
-		this.send("change-value", {value: ""});
+		this.send("change-value", { value: "" });
 	}
 
 	getViewData(): string {
@@ -103,10 +134,10 @@ export class CodeEditorView extends TextFileView {
 		return this.value;
 	}
 
-	setViewData(data: string, clear = false): void {
+	setViewData(data: string): void {
 		// console.log("!!set view data", this.id, this.file?.name, data, clear)
 		this.value = data;
-		this.send("change-value", {value: data});
+		this.send("change-value", { value: data });
 	}
 
 	getLanguage() {
@@ -382,9 +413,12 @@ export class CodeEditorView extends TextFileView {
 
 	send(type: string, payload: any) {
 		// console.log("!!send", this.id, !!this.iframe, !!this.iframe?.contentWindow)
-		this.iframe?.contentWindow?.postMessage({
-			type,
-			...payload
-		}, "*");
+		this.iframe?.contentWindow?.postMessage(
+			{
+				type,
+				...payload,
+			},
+			"*"
+		);
 	}
 }

@@ -1,4 +1,3 @@
-
 export interface MyPluginSettings {
 	extensions: string[];
 	folding: boolean;
@@ -15,7 +14,6 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	minimap: true,
 	semanticValidation: true,
 	syntaxValidation: true,
-}
-
+};
 
 export const viewType = "code-editor";
