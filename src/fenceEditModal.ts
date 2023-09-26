@@ -1,7 +1,7 @@
-import { Modal } from "obsidian";
+import { Modal, Notice } from "obsidian";
 import { mountCodeEditor } from "./mountCodeEditor";
 import CodeFilesPlugin from "./codeFilesPlugin";
-import { getLanguage } from "./getLanguage";
+import { FenceEditContext } from "./fenceEditContext";
 
 export class FenceEditModal extends Modal {
 	private codeEditor: ReturnType<typeof mountCodeEditor>;
@@ -32,6 +32,10 @@ export class FenceEditModal extends Modal {
 			"--dialog-height": "90vh",
 		});
 		this.modalEl.style.height = "var(--dialog-height)";
+
+		this.modalEl.querySelector<HTMLDivElement>(
+			".modal-close-button"
+		)!.style.background = "var(--modal-background)";
 	}
 
 	onClose() {
@@ -41,42 +45,24 @@ export class FenceEditModal extends Modal {
 	}
 
 	static openOnCurrentCode(plugin: CodeFilesPlugin) {
-		const editor = plugin.app.workspace.activeEditor?.editor;
-		const cursor = editor?.getCursor();
+		const context = FenceEditContext.create(plugin);
 
-		if (!editor || !cursor) return;
-
-		let start = cursor.line;
-		let end = cursor.line;
-		while (start > 0 && !editor.getLine(start).startsWith("```")) {
-			start--;
-		}
-		while (
-			end < editor.lineCount() &&
-			!editor.getLine(end).startsWith("```")
-		) {
-			end++;
+		if (!context.isInFence()) {
+			new Notice("Your cursor is currently not in a valid code block.");
+			return;
 		}
 
-		let editorContent = "";
-		for (let i = start + 1; i < end; i++) {
-			editorContent += `${editor.getLine(i)}\n`;
-		}
+		const fenceData = context.getFenceData();
 
-		editorContent = editorContent.slice(0, editorContent.length - 1);
-		const langKey = editor.getLine(start).slice(3).trim();
+		if (!fenceData) {
+			return;
+		}
 
 		new FenceEditModal(
 			plugin,
-			editorContent,
-			getLanguage(langKey),
-			(value) => {
-				editor.replaceRange(
-					`${value}\n`,
-					{ line: start + 1, ch: 0 },
-					{ line: end, ch: 0 }
-				);
-			}
+			fenceData.content,
+			fenceData.language,
+			(value) => context.replaceFenceContent(value)
 		).open();
 	}
 }

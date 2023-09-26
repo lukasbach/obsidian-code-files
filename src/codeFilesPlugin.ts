@@ -4,6 +4,7 @@ import { CodeEditorView } from "./codeEditorView";
 import { CreateCodeFileModal } from "./createCodeFileModal";
 import { CodeFilesSettingsTab } from "./codeFilesSettingsTab";
 import { FenceEditModal } from "./fenceEditModal";
+import { FenceEditContext } from "./fenceEditContext";
 
 export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -27,8 +28,23 @@ export default class CodeFilesPlugin extends Plugin {
 				menu.addItem((item) => {
 					item.setTitle("Create Code File")
 						.setIcon("file-json")
-						.onClick(async () => {
+						.onClick(() => {
 							new CreateCodeFileModal(this, file).open();
+						});
+				});
+			})
+		);
+
+		this.registerEvent(
+			this.app.workspace.on("editor-menu", (menu) => {
+				if (!FenceEditContext.create(this).isInFence()) {
+					return;
+				}
+				menu.addItem((item) => {
+					item.setTitle("Edit Code Block in Monaco Editor")
+						.setIcon("code")
+						.onClick(() => {
+							FenceEditModal.openOnCurrentCode(this);
 						});
 				});
 			})
