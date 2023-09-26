@@ -5,6 +5,9 @@
 The plugin adds a code editor view to Obsidian. The code editor uses the powerful
 [Monaco Editor](https://microsoft.github.io/monaco-editor/), which also powers VS Code.
 
+*__🚀 New Feature: The plugin now also supports editing individual code blocks from Markdown
+files in an embedded Monaco Editor instance. Read [below](#new-feature-code-block-editing).__*
+
 **Caveat: This plugin currently relies on hosted dependencies and thus needs an internet connection.
 Read [below](#caveat-online-dependency) for more information.**
 
@@ -15,6 +18,21 @@ on a folder in the side pane and clicking on "Create Code File", search for
 in the ribbon.
 
 ![img_1.png](img_1.png)
+
+## New Feature: Code Block Editing
+
+As of Version 0.2.0, the plugin also supports editing individual code blocks from any
+Markdown document in the editor. You
+can either invoke the command palette and search for "Open Current Code Block in Monaco
+Editor", or right click on any code block and click on "Edit Code Block in Monaco Editor".
+
+This will open a new modal with a Monaco Editor instance in which you can edit the code
+block, which will automatically sync back to the block in your document when you close
+the modal.
+
+![fence-editing.gif](fence-editing.gif)
+
+## More Screenshots
 
 ![img_2.png](img_2.png)
 
