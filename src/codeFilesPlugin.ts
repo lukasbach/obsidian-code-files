@@ -3,7 +3,7 @@ import { DEFAULT_SETTINGS, MyPluginSettings, viewType } from "./common";
 import { CodeEditorView } from "./codeEditorView";
 import { CreateCodeFileModal } from "./createCodeFileModal";
 import { CodeFilesSettingsTab } from "./codeFilesSettingsTab";
-import { CodeEditModal } from "./codeEditModal";
+import { FenceEditModal } from "./fenceEditModal";
 
 export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -18,7 +18,7 @@ export default class CodeFilesPlugin extends Plugin {
 			id: "open-codeblock-in-monaco",
 			name: "Open current code block in Monaco Editor",
 			callback: () => {
-				CodeEditModal.openOnCurrentCode(this);
+				FenceEditModal.openOnCurrentCode(this);
 			},
 		});
 

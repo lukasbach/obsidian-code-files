@@ -3,7 +3,7 @@ import { mountCodeEditor } from "./mountCodeEditor";
 import CodeFilesPlugin from "./codeFilesPlugin";
 import { getLanguage } from "./getLanguage";
 
-export class CodeEditModal extends Modal {
+export class FenceEditModal extends Modal {
 	private codeEditor: ReturnType<typeof mountCodeEditor>;
 
 	private constructor(
@@ -66,7 +66,7 @@ export class CodeEditModal extends Modal {
 		editorContent = editorContent.slice(0, editorContent.length - 1);
 		const langKey = editor.getLine(start).slice(3).trim();
 
-		new CodeEditModal(
+		new FenceEditModal(
 			plugin,
 			editorContent,
 			getLanguage(langKey),
