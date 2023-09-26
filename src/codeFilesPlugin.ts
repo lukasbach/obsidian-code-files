@@ -3,6 +3,7 @@ import { DEFAULT_SETTINGS, MyPluginSettings, viewType } from "./common";
 import { CodeEditorView } from "./codeEditorView";
 import { CreateCodeFileModal } from "./createCodeFileModal";
 import { CodeFilesSettingsTab } from "./codeFilesSettingsTab";
+import { CodeEditModal } from "./codeEditModal";
 
 export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -12,6 +13,14 @@ export default class CodeFilesPlugin extends Plugin {
 
 		this.registerView(viewType, (leaf) => new CodeEditorView(leaf, this));
 		this.registerExtensions(this.settings.extensions, viewType);
+
+		this.addCommand({
+			id: "open-codeblock-in-monaco",
+			name: "Open current code block in Monaco Editor",
+			callback: () => {
+				CodeEditModal.openOnCurrentCode(this);
+			},
+		});
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
