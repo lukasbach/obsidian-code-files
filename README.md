@@ -21,7 +21,7 @@ in the ribbon.
 
 ## New Feature: Code Block Editing
 
-As of Version 0.2.0, the plugin also supports editing individual code blocks from any
+As of Version 1.1.0, the plugin also supports editing individual code blocks from any
 Markdown document in the editor. You
 can either invoke the command palette and search for "Open Current Code Block in Monaco
 Editor", or right click on any code block and click on "Edit Code Block in Monaco Editor".
