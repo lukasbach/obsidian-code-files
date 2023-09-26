@@ -10,7 +10,7 @@ export class FenceEditModal extends Modal {
 		private plugin: CodeFilesPlugin,
 		private code: string,
 		private language: string,
-		private onSave: (code: string) => void
+		private onSave: (changedCode: string) => void
 	) {
 		super(plugin.app);
 	}

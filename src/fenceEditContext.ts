@@ -94,7 +94,6 @@ export class FenceEditContext {
 	}
 
 	replaceFenceContent(value: string) {
-		console.log("EDIT", value, this.start, this.end);
 		this.editor?.replaceRange(
 			`${value}\n`,
 			{ line: this.start + 1, ch: 0 },
