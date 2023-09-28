@@ -13,7 +13,19 @@ export default class CodeFilesPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.registerView(viewType, (leaf) => new CodeEditorView(leaf, this));
-		this.registerExtensions(this.settings.extensions, viewType);
+
+		try {
+			this.registerExtensions(this.settings.extensions, viewType);
+		} catch (e) {
+			console.log("code-files plugin error:", e);
+			new Notification("Code Files Plugin Error", {
+				body:
+					`Could not register extensions ${this.settings.extensions.join(
+						", "
+					)}; there are probably some other extensions that already registered them. ` +
+					`Please change code-files's extensions in the plugin settings or remove conflicting plugins.`,
+			});
+		}
 
 		this.addCommand({
 			id: "open-codeblock-in-monaco",
