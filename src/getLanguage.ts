@@ -5,11 +5,13 @@ export const getLanguage = (extension: string) => {
 		case "jsx":
 		case "cjs":
 		case "mjs":
+		case "javascript":
 			return "javascript";
 		case "ts":
 		case "tsx":
 		case "cts":
 		case "mts":
+		case "typescript":
 			return "typescript";
 		case "json":
 			return "json";
@@ -19,6 +21,7 @@ export const getLanguage = (extension: string) => {
 		case "cpy":
 		case "gyp":
 		case "gypi":
+		case "python":
 			return "python";
 		case "css":
 			return "css";
@@ -65,6 +68,7 @@ export const getLanguage = (extension: string) => {
 		case "rbx":
 		case "rjs":
 		case "gemspec":
+		case "ruby":
 			return "ruby";
 		case "markdown":
 		case "mdown":
@@ -74,6 +78,7 @@ export const getLanguage = (extension: string) => {
 		case "mdtxt":
 		case "mdtext":
 		case "mdx":
+		case "md":
 			return "markdown";
 		case "r":
 		case "rhistory":
