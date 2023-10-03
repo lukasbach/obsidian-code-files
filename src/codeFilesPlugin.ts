@@ -1,11 +1,10 @@
-import { Plugin, SuggestModal, TAbstractFile, TFile } from "obsidian";
+import { Plugin } from "obsidian";
 import { DEFAULT_SETTINGS, MyPluginSettings, viewType } from "./common";
 import { CodeEditorView } from "./codeEditorView";
 import { CreateCodeFileModal } from "./createCodeFileModal";
 import { CodeFilesSettingsTab } from "./codeFilesSettingsTab";
 import { FenceEditModal } from "./fenceEditModal";
 import { FenceEditContext } from "./fenceEditContext";
-import { CssFile } from "./cssFile";
 import { ChooseCssFileModal } from "./chooseCssFileModal";
 
 export default class CodeFilesPlugin extends Plugin {
