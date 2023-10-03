@@ -43,7 +43,8 @@ export class CodeEditorView extends TextFileView {
 			this.plugin,
 			getLanguage(file.extension),
 			this.initialValue,
-			this.getContext(file)
+			this.getContext(file),
+			() => this.requestSave()
 		);
 
 		this.contentEl.style.overflow = "hidden";
@@ -70,5 +71,15 @@ export class CodeEditorView extends TextFileView {
 	setViewData(data: string): void {
 		this.initialValue = data;
 		this.codeEditor?.setValue(data);
+	}
+
+	static openFile(file: TFile, plugin: CodeFilesPlugin) {
+		const leaf = plugin.app.workspace.getLeaf(true);
+		const view = new CodeEditorView(leaf, plugin);
+		view.file = file;
+		view.onLoadFile(file);
+		leaf.open(view);
+		view.load();
+		plugin.app.workspace.revealLeaf(leaf);
 	}
 }

@@ -32,6 +32,13 @@ the modal.
 
 ![fence-editing.gif](fence-editing.gif)
 
+## New Feature: Allows editing CSS Snippets
+
+Search for the command "Edit CSS Snippet" to search CSS Snippets that exist in your
+Obsidian vault and edit them in the Monaco Editor.
+
+![css-files.gif](css-files.gif)
+
 ## More Screenshots
 
 ![img_2.png](img_2.png)

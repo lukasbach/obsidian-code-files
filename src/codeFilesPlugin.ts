@@ -1,10 +1,12 @@
-import { Plugin } from "obsidian";
+import { Plugin, SuggestModal, TAbstractFile, TFile } from "obsidian";
 import { DEFAULT_SETTINGS, MyPluginSettings, viewType } from "./common";
 import { CodeEditorView } from "./codeEditorView";
 import { CreateCodeFileModal } from "./createCodeFileModal";
 import { CodeFilesSettingsTab } from "./codeFilesSettingsTab";
 import { FenceEditModal } from "./fenceEditModal";
 import { FenceEditContext } from "./fenceEditContext";
+import { CssFile } from "./cssFile";
+import { ChooseCssFileModal } from "./chooseCssFileModal";
 
 export default class CodeFilesPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -46,13 +48,21 @@ export default class CodeFilesPlugin extends Plugin {
 					return;
 				}
 
-				const leaf = this.app.workspace.getLeaf(true);
-				const view = new CodeEditorView(leaf, this);
-				view.file = file;
-				view.onLoadFile(file);
-				leaf.open(view);
-				view.load();
-				this.app.workspace.revealLeaf(leaf);
+				CodeEditorView.openFile(file, this);
+			},
+		});
+
+		this.addCommand({
+			id: "open-css-snippet",
+			name: "Edit CSS Snippet",
+			callback: async () => {
+				const cssFiles = (
+					await this.app.vault.adapter.list(
+						`${this.app.vault.configDir}/snippets`
+					)
+				).files;
+				const modal = new ChooseCssFileModal(this, cssFiles);
+				modal.open();
 			},
 		});
 
