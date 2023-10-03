@@ -35,6 +35,27 @@ export default class CodeFilesPlugin extends Plugin {
 			},
 		});
 
+		this.addCommand({
+			id: "open-current-file-in-monaco",
+			name: "Open current file in Monaco Editor",
+			callback: () => {
+				const file = this.app.workspace.activeEditor?.file;
+
+				if (!file) {
+					new Notification("No viable file open");
+					return;
+				}
+
+				const leaf = this.app.workspace.getLeaf(true);
+				const view = new CodeEditorView(leaf, this);
+				view.file = file;
+				view.onLoadFile(file);
+				leaf.open(view);
+				view.load();
+				this.app.workspace.revealLeaf(leaf);
+			},
+		});
+
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
 				menu.addItem((item) => {

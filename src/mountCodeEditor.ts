@@ -4,7 +4,8 @@ export const mountCodeEditor = (
 	plugin: CodeFilesPlugin,
 	language: string,
 	initialValue: string,
-	codeContext: string
+	codeContext: string,
+	onChange?: () => void
 ) => {
 	let value = initialValue;
 	const theme = (app as any).getTheme() === "obsidian" ? "vs-dark" : "vs";
@@ -77,6 +78,7 @@ export const mountCodeEditor = (
 				if (data.context === codeContext) {
 					// console.log("!change event", data.value, data.context);
 					value = data.value;
+					onChange?.();
 				} else {
 					// console.log("!change event", data.value, data.context, "ignored!!!!!!!!!!!!");
 				}
