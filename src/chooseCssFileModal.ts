@@ -8,12 +8,31 @@ export class ChooseCssFileModal extends SuggestModal<string> {
 	}
 
 	getSuggestions(query: string): string[] {
-		return this.cssFiles.filter((item) =>
+		const files = this.cssFiles.filter((item) =>
 			item.toLowerCase().includes(query.toLowerCase())
 		);
+		if (query) {
+			return [...files, `Create new snippet "${query}.css"`];
+		}
+
+		return files;
 	}
 
-	onChooseSuggestion(item: string): any {
+	async onChooseSuggestion(item: string) {
+		const maybeCreateFile = item.match(/Create new snippet "(.*)\.css"/);
+
+		if (maybeCreateFile?.[1]) {
+			const path = `${this.app.vault.configDir}/snippets/${maybeCreateFile[1]}.css`;
+			await this.plugin.app.vault.adapter.write(path, "");
+			CodeEditorView.openFile(
+				// @ts-ignore
+				new TFile(this.app.vault, path),
+				this.plugin
+			);
+			new Notification("Make sure to enable new snippet in options.");
+			return;
+		}
+
 		CodeEditorView.openFile(
 			// @ts-ignore
 			new TFile(this.app.vault, item),
