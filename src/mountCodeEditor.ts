@@ -8,15 +8,21 @@ export const mountCodeEditor = (
 	onChange?: () => void
 ) => {
 	let value = initialValue;
-	const theme = document.body.classList.contains("theme-dark")
+	const defaultTheme = document.body.classList.contains("theme-dark")
 		? "vs-dark"
 		: "vs";
+	const theme =
+		plugin.settings.theme === "default"
+			? defaultTheme
+			: plugin.settings.theme;
 
 	const queryParameters = new URLSearchParams();
 	queryParameters.append("context", codeContext);
 	queryParameters.append("lang", language);
 	queryParameters.append("theme", theme);
-	queryParameters.append("background", "transparent");
+	if (plugin.settings.overwriteBg) {
+		queryParameters.append("background", "transparent");
+	}
 	queryParameters.append(
 		"folding",
 		plugin.settings.folding ? "true" : "false"
@@ -70,10 +76,12 @@ export const mountCodeEditor = (
 				send("change-language", {
 					language,
 				});
-				send("change-background", {
-					background: "transparent",
-					theme,
-				});
+				if (plugin.settings.overwriteBg) {
+					send("change-background", {
+						background: "transparent",
+						theme,
+					});
+				}
 				break;
 			}
 			case "change": {

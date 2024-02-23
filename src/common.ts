@@ -5,6 +5,8 @@ export interface MyPluginSettings {
 	minimap: boolean;
 	semanticValidation: boolean;
 	syntaxValidation: boolean;
+	theme: string;
+	overwriteBg: boolean;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
@@ -14,6 +16,8 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 	minimap: true,
 	semanticValidation: true,
 	syntaxValidation: true,
+	theme: "default",
+	overwriteBg: true,
 };
 
 export const viewType = "code-editor";
