@@ -12,7 +12,6 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "MIT",
 	"devDependencies": {
 		"@lukasbach/eslint-config-deps": "^1.0.2",
 		"@types/node": "^16.11.6",
