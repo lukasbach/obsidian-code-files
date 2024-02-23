@@ -19,9 +19,16 @@ in the ribbon.
 
 ![img_1.png](img_1.png)
 
-## New Feature: Code Block Editing
+## New feature: Themes
 
-As of Version 1.1.0, the plugin also supports editing individual code blocks from any
+Besides the default themes that ship with VSCode, the plugin also supports a long list
+of custom well-established themes to choose from.
+
+![img_3.png](img_3.png)
+
+## Code Block Editing
+
+The plugin also supports editing individual code blocks from any
 Markdown document in the editor. You
 can either invoke the command palette and search for "Open Current Code Block in Monaco
 Editor", or right click on any code block and click on "Edit Code Block in Monaco Editor".
@@ -32,7 +39,7 @@ the modal.
 
 ![fence-editing.gif](fence-editing.gif)
 
-## New Feature: Allows editing CSS Snippets
+## Editing CSS Snippets
 
 Search for the command "Edit CSS Snippet" to search CSS Snippets that exist in your
 Obsidian vault and edit them in the Monaco Editor.
