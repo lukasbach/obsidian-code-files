@@ -8,7 +8,9 @@ export const mountCodeEditor = (
 	onChange?: () => void
 ) => {
 	let value = initialValue;
-	const theme = (app as any).getTheme() === "obsidian" ? "vs-dark" : "vs";
+	const theme = document.body.classList.contains("theme-dark")
+		? "vs-dark"
+		: "vs";
 
 	const queryParameters = new URLSearchParams();
 	queryParameters.append("context", codeContext);
