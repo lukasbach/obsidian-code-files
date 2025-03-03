@@ -79,7 +79,7 @@ export class FenceEditContext {
 		}
 
 		const content = editorContent.slice(0, editorContent.length - 1);
-		const langKey = this.editor.getLine(this.start).slice(3).trim();
+		const langKey = this.editor.getLine(this.start).slice(3).trim().split(" ")[0];
 		const language = getLanguage(langKey);
 
 		return { content, language };
