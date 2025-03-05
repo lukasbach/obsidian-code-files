@@ -1,0 +1,25 @@
+/* Adjust Monaco editor to fit Obsidian's UI */
+.monaco-container {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.monaco-editor .overflow-guard {
+  border-radius: 4px;
+}
+
+/* When using transparent background, ensure text remains visible */
+.monaco-editor .view-line {
+  text-shadow: 0 0 1px var(--background-modifier-border);
+}
+
+/* Make the editor take up the full available space */
+.workspace-leaf-content[data-type="code-editor"] .view-content {
+  padding: 0;
+}
+
+/* Style adjustments for the fence editing modal */
+.modal .monaco-container {
+  height: calc(100% - 20px);
+  margin-top: 10px;
+} 

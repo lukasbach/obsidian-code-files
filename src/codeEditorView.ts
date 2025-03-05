@@ -3,7 +3,7 @@
 import { TextFileView, TFile, WorkspaceLeaf } from "obsidian";
 import { viewType } from "./common";
 import CodeFilesPlugin from "./codeFilesPlugin";
-import { mountCodeEditor } from "./mountCodeEditor";
+import { createMonacoEditor } from "./monacoEditor";
 import { getLanguage } from "./getLanguage";
 
 export class CodeEditorView extends TextFileView {
@@ -11,12 +11,18 @@ export class CodeEditorView extends TextFileView {
 
 	id = CodeEditorView.i++;
 
-	codeEditor: ReturnType<typeof mountCodeEditor>;
+	editorContainer: HTMLElement;
+
+	monacoEditor: Awaited<ReturnType<typeof createMonacoEditor>>;
 
 	initialValue: string;
 
 	constructor(leaf: WorkspaceLeaf, private plugin: CodeFilesPlugin) {
 		super(leaf);
+		this.editorContainer = document.createElement('div');
+		this.editorContainer.className = 'monaco-container';
+		this.editorContainer.style.width = '100%';
+		this.editorContainer.style.height = '100%';
 	}
 
 	getDisplayText(): string {
@@ -33,27 +39,30 @@ export class CodeEditorView extends TextFileView {
 
 	async onClose() {
 		await super.onClose();
-		this.codeEditor.destroy();
+		if (this.monacoEditor) {
+			this.monacoEditor.destroy();
+		}
 	}
 
 	async onLoadFile(file: TFile) {
 		await super.onLoadFile(file);
-
-		this.codeEditor = mountCodeEditor(
+		this.contentEl.empty();
+		this.contentEl.append(this.editorContainer);
+		
+		this.monacoEditor = await createMonacoEditor(
 			this.plugin,
 			getLanguage(file.extension),
 			this.initialValue,
-			this.getContext(file),
+			this.editorContainer,
 			() => this.requestSave()
 		);
-
-		this.contentEl.style.overflow = "hidden";
-		this.contentEl.append(this.codeEditor.iframe);
 	}
 
 	async onUnloadFile(file: TFile) {
 		await super.onUnloadFile(file);
-		this.codeEditor.destroy();
+		if (this.monacoEditor) {
+			this.monacoEditor.destroy();
+		}
 	}
 
 	async onOpen() {
@@ -61,25 +70,28 @@ export class CodeEditorView extends TextFileView {
 	}
 
 	clear(): void {
-		this.codeEditor.clear();
+		if (this.monacoEditor) {
+			this.monacoEditor.clear();
+		}
 	}
 
 	getViewData(): string {
-		return this.codeEditor.getValue();
+		return this.monacoEditor ? this.monacoEditor.getValue() : this.initialValue || '';
 	}
 
 	setViewData(data: string): void {
 		this.initialValue = data;
-		this.codeEditor?.setValue(data);
+		if (this.monacoEditor) {
+			this.monacoEditor.setValue(data);
+		}
 	}
 
-	static openFile(file: TFile, plugin: CodeFilesPlugin) {
+	static async openFile(file: TFile, plugin: CodeFilesPlugin) {
 		const leaf = plugin.app.workspace.getLeaf(true);
 		const view = new CodeEditorView(leaf, plugin);
 		view.file = file;
-		view.onLoadFile(file);
 		leaf.open(view);
-		view.load();
+		await view.onLoadFile(file);
 		plugin.app.workspace.revealLeaf(leaf);
 	}
 }

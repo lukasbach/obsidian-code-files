@@ -1,6 +1,8 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import fs from 'fs';
+import path from 'path';
 
 const banner =
 `/*
@@ -38,6 +40,16 @@ const context = await esbuild.context({
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
 	outfile: "main.js",
+	loader: {
+		'.ttf': 'file',
+		'.woff': 'file',
+		'.woff2': 'file',
+		'.js': 'jsx',
+		'.css': 'text',
+	},
+	define: {
+		'process.env.NODE_ENV': prod ? '"production"' : '"development"',
+	},
 });
 
 if (prod) {

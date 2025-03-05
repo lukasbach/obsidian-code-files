@@ -1,10 +1,11 @@
 import { Modal, Notice } from "obsidian";
-import { mountCodeEditor } from "./mountCodeEditor";
+import { createMonacoEditor } from "./monacoEditor";
 import CodeFilesPlugin from "./codeFilesPlugin";
 import { FenceEditContext } from "./fenceEditContext";
 
 export class FenceEditModal extends Modal {
-	private codeEditor: ReturnType<typeof mountCodeEditor>;
+	private monacoContainer: HTMLElement;
+	private monacoEditor: Awaited<ReturnType<typeof createMonacoEditor>> | null = null;
 
 	private constructor(
 		private plugin: CodeFilesPlugin,
@@ -13,38 +14,39 @@ export class FenceEditModal extends Modal {
 		private onSave: (changedCode: string) => void
 	) {
 		super(plugin.app);
+		this.monacoContainer = document.createElement('div');
+		this.monacoContainer.style.width = '100%';
+		this.monacoContainer.style.height = '100%';
 	}
 
-	onOpen() {
+	async onOpen() {
 		super.onOpen();
-
-		this.codeEditor = mountCodeEditor(
+		
+		this.contentEl.append(this.monacoContainer);
+		
+		this.monacoEditor = await createMonacoEditor(
 			this.plugin,
 			this.language,
 			this.code,
-			"modal-editor"
+			this.monacoContainer
 		);
-
-		this.contentEl.append(this.codeEditor.iframe);
 
 		this.modalEl.setCssProps({
 			"--dialog-width": "90vw",
 			"--dialog-height": "90vh",
 		});
 		this.modalEl.style.height = "var(--dialog-height)";
-
-		this.modalEl.querySelector<HTMLDivElement>(
-			".modal-close-button"
-		)!.style.background = "var(--modal-background)";
 	}
 
 	onClose() {
 		super.onClose();
-
-		this.onSave(this.codeEditor.getValue());
+		if (this.monacoEditor) {
+			this.onSave(this.monacoEditor.getValue());
+			this.monacoEditor.destroy();
+		}
 	}
 
-	static openOnCurrentCode(plugin: CodeFilesPlugin) {
+	static async openOnCurrentCode(plugin: CodeFilesPlugin) {
 		const context = FenceEditContext.create(plugin);
 
 		if (!context.isInFence()) {
@@ -58,11 +60,13 @@ export class FenceEditModal extends Modal {
 			return;
 		}
 
-		new FenceEditModal(
+		const modal = new FenceEditModal(
 			plugin,
 			fenceData.content,
 			fenceData.language,
 			(value) => context.replaceFenceContent(value)
-		).open();
+		);
+		
+		modal.open();
 	}
-}
+} 

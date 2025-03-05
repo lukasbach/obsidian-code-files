@@ -5,11 +5,10 @@
 The plugin adds a code editor view to Obsidian. The code editor uses the powerful
 [Monaco Editor](https://microsoft.github.io/monaco-editor/), which also powers VS Code.
 
-*__🚀 New Feature: The plugin now also supports editing individual code blocks from Markdown
-files in an embedded Monaco Editor instance. Read [below](#new-feature-code-block-editing).__*
+*__🚀 New Feature: The plugin now directly integrates Monaco Editor, eliminating the previous iframe dependency!__*
 
-**Caveat: This plugin currently relies on hosted dependencies and thus needs an internet connection.
-Read [below](#caveat-online-dependency) for more information.**
+*__🚀 Feature: The plugin also supports editing individual code blocks from Markdown
+files in an embedded Monaco Editor instance. Read [below](#code-block-editing).__*
 
 In the plugin settings, you can configure for which file extensions the editor will be
 available as default editor. You can also create new code files, either by right clicking
@@ -19,7 +18,7 @@ in the ribbon.
 
 ![img_1.png](img_1.png)
 
-## New feature: Themes
+## Themes
 
 Besides the default themes that ship with VSCode, the plugin also supports a long list
 of custom well-established themes to choose from.
@@ -52,12 +51,8 @@ Obsidian vault and edit them in the Monaco Editor.
 
 ![img.png](img.png)
 
-## Caveat: Online dependency
+## Technical Note
 
-Due to the complicated nature of bundling the Monaco Editor, the plugin currently relies on
-a hosted version of the editor. This means that the plugin needs an internet connection to
-work, and has a dependency on the hosted editor, which is currently available on
-https://embeddable-monaco.lukasbach.com.
-
-I hope to remove this dependency in the future, but this was the easiest way to get the
-plugin to work for now.
+The plugin directly integrates Monaco Editor and its worker scripts using CDN references to ensure
+optimal loading performance. This approach provides the best balance between bundle size and
+feature completeness.
